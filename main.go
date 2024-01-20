@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gbenga/gostruct/apartment"
 )
 
 // type Car struct{
@@ -105,75 +106,119 @@ import (
 // 	return allMovies
 // }
 
-//const mapItemCount = x
-
-type Apartment struct {
-	RoomsCount int
-	Area       float64
-	District   string
-	isRented   bool
-	Name       string
-
-}
+//const mapItemCount = x 
 
 const comfortPrice = 5000
-
+//STRUCT
 func main(){
-	apartments := []Apartment{
+	apartments := []apartment.Apartment{
 		{
 			Name: "lux",
 			RoomsCount: 5,
 			Area: 100.2,
 			District: "area1",
-			isRented: false,
+			IsRented: false,
 		},
 		{
 			Name: "lux2",
 			RoomsCount: 3,
 			Area: 88.9,
 			District: "area1",
-			isRented: true,
+			IsRented: true,
 		},
 		{
 			Name: "sm",
 			RoomsCount: 1,
 			Area: 25.3,
 			District: "area2",
-			isRented: true,
+			IsRented: true,
 		},
 		{
 			Name: "md",
 			RoomsCount: 2,
 			Area: 44.3,
 			District: "area3",
-			isRented: false,
+			IsRented: false,
 		},
 		{
 			Name: "md2",
 			RoomsCount: 2,
 			Area: 56.0,
 			District: "area4",
-			isRented: false,
+			IsRented: false,
 		},
 		{
 			Name: "lux3",
 			RoomsCount: 4,
 			Area: 118.0,
 			District: "area5",
-			isRented: true,
+			IsRented: true,
+		},
+
+	}
+
+// MAPS/ MAPPING
+	apartmentsByName := map[string]apartment.Apartment{
+		"lux": {
+			Name: "lux",
+			RoomsCount: 5,
+			Area: 100.2,
+			District: "area1",
+			IsRented: false,
+		},
+		  "lux2": {
+			Name: "lux2",
+			RoomsCount: 3,
+			Area: 88.9,
+			District: "area1",
+			IsRented: true,
+		},
+		 "sm": {
+			Name: "sm",
+			RoomsCount: 1,
+			Area: 25.3,
+			District: "area2",
+			IsRented: true,
+		},
+		  "md" :{
+			Name: "md",
+			RoomsCount: 2,
+			Area: 44.3,
+			District: "area3",
+			IsRented: false,
+		},
+		 "md2" :{
+			Name: "md2",
+			RoomsCount: 2,
+			Area: 56.0,
+			District: "area4",
+			IsRented: false,
+		},
+		 "lux3" :{
+			Name: "lux3",
+			RoomsCount: 4,
+			Area: 118.0,
+			District: "area5",
+			IsRented: true,
 		},
 
 	}
 	for _, apartment := range apartments {
 		pricePerSqFt := apartmentPrice(apartment.District,apartment.RoomsCount)
 		totalPriceBasedOnArea := calculateApartmentPrice(apartment.Area, pricePerSqFt)
-		totalPriceBasedOnArea = reduceApartmentPrice(apartment.isRented, totalPriceBasedOnArea) 
+		totalPriceBasedOnArea = reduceApartmentPrice(apartment.IsRented, totalPriceBasedOnArea) 
 		areaComfortIndex := calculateAreaComfortIndex(apartment.District)
 
 		totalPriceBasedOnArea = areaComfortIndex * comfortPrice + totalPriceBasedOnArea
 		fmt.Printf("Selling price of %q is %.2f\n",apartment.Name, totalPriceBasedOnArea,)
 	}
 	
+	foundApartment, isFound := findApartmentByName("lux3", apartmentsByName)
+	if isFound {
+		fmt.Printf("apartment: %+v", foundApartment)
+	} else {
+		fmt.Println("not found")
+	}
 
 }
 
@@ -233,4 +278,20 @@ func reduceApartmentPrice(isRented bool, price float64)float64{
 
 func calculateApartmentPrice(price float64, area float64) float64 {
 	return price * area
+}
+
+// func findApartmentByName(name string, apartments []apartment.Apartment) (apartment.Apartment, bool){ // the normal iteration in a slice
+// 	for _, apartment := range apartments {
+// 		if apartment.Name == name {
+// 			return apartment, true
+// 		}
+// 	}
+// 	return Apartment{},false
+
+//} 
+
+func findApartmentByName(name string, apartments map[string]apartment.Apartment) (apartment.Apartment , bool) { //iteration using maps
+	apartment, ok := apartments[name]
+
+	return apartment, ok
 }
